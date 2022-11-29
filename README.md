@@ -95,6 +95,24 @@ get_text(input_file, key_file)
 ---
 
 ``` python
+parse_text(message)
+```
+
+- Description:
+
+	Removes all whitespace and punctuation marks from message leaving only characters A-Z
+
+- Parameters:
+
+	`message` List containing plaintext
+
+- Return:
+
+	`new_message` List containing plaintext with only characters A-Z
+
+---
+
+``` python
 ```
 
 - Description:
