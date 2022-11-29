@@ -73,19 +73,24 @@ get_files()
 ---
 
 ``` python
+get_text(input_file, key_file)
 ```
 
 - Description:
 
-
+	Reads in all contents of the input file and key file
 
 - Parameters:
 
+	`input_file` String representing filename containing plaintext
 
+	`key_file` String representing filename containing encryption key
 
 - Return:
 
+	`message` List containing all text from the input file
 
+	`key` List containing all text from the key file
 
 ---
 
@@ -102,6 +107,19 @@ get_files()
 
 - Return:
 
+---
 
+``` python
+```
+
+- Description:
+
+
+
+- Parameters:
+
+
+
+- Return:
 
 ## Other <a name="other"></a>
