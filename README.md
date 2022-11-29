@@ -113,6 +113,26 @@ parse_text(message)
 ---
 
 ``` python
+output_data(type, data)
+```
+
+- Description:
+
+	Outputs steps in encryption
+
+- Parameters:
+
+	`type` String representing what type of step is being outputted
+
+	`data` List representing the current data being encrypted
+
+- Return:
+
+	None
+
+---
+
+``` python
 ```
 
 - Description:
