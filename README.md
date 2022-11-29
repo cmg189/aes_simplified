@@ -15,10 +15,11 @@ Python based program that implements an encryption system using a simplified ver
 AES simplified start by asking the user for the filenames of the files that have the plaintext to be encrypted, the encryption key, and the file where the resulting cyphertext will be written to
 
 **NOTE:**
+
 When executing this program, ensure to have files in the same directory containing plaintext, the encryption key, and where the cyphertext will be written to
 
 
-AES simplified encrypts plaintext using various methods implemented by AES such as:
+Plaintext encryption uses various methods implemented by AES such as:
 
 - Polyalphabetic Substitution via the Encryption Key
 
@@ -45,7 +46,7 @@ AES simplified encrypts plaintext using various methods implemented by AES such 
 
 ## Execution <a name="exe"></a>
 
-	To execute run the command `python3 main.py`
+To execute run the command `python3 main.py`
 
 ## Function Headers <a name="function"></a>
 
@@ -53,15 +54,15 @@ AES simplified encrypts plaintext using various methods implemented by AES such 
 get_files()
 ```
 
-Description:
+- Description:
 
 	Receives filenames from user
 
-Parameters:
+- Parameters:
 
 	None
 
-Return:
+- Return:
 
 	`input_file` String representing the name of the file that contains the plaintext to be encrypted
 
@@ -74,15 +75,15 @@ Return:
 ``` python
 ```
 
-Description:
+- Description:
 
 
 
-Parameters:
+- Parameters:
 
 
 
-Return:
+- Return:
 
 
 
@@ -91,15 +92,15 @@ Return:
 ``` python
 ```
 
-Description:
+- Description:
 
 
 
-Parameters:
+- Parameters:
 
 
 
-Return:
+- Return:
 
 
 
