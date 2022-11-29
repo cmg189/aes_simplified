@@ -21,5 +21,58 @@ Python based program that implements an encryption system using a simplified ver
 
 ## Function Headers <a name="function"></a>
 
+``` python
+get_files()
+```
+
+Description:
+
+	Receives filenames from user
+
+Parameters:
+
+	None
+
+Return:
+
+	`input_file` String representing the name of the file that contains the plaintext to be encrypted
+
+	`key_file` String representing the name of the file that contains the encryption key
+
+	`output_file` String representing the name of the file that the cyphertext will be written to
+
+---
+
+``` python
+```
+
+Description:
+
+
+
+Parameters:
+
+
+
+Return:
+
+
+
+---
+
+``` python
+```
+
+Description:
+
+
+
+Parameters:
+
+
+
+Return:
+
+
 
 ## Other <a name="other"></a>
