@@ -21,7 +21,11 @@ def main():
 	cipher_text, cipher_groups = Vcipher_encrypt(preprocess, key)
 
 	# output encrypted text
-	output_data("\nSubstitution:\n", encrypted)
+	output_data("\nSubstitution:\n", cipher_text)
+
+	# add padding if necessary
+	#padded_text, padded_groups = padding(cipher_text, cipher_groups, len(key))
+	padding(cipher_text, cipher_groups, len(key))
 
 	# end program
 	sys.exit("\n\nProgram ended\n")
@@ -130,6 +134,19 @@ def Vcipher_encrypt(text, key):
 
 	return encrypted_text, encrypted_groups
 
+# add padding if necessary
+def padding(text, groups, key_len):
+	# check if last group in list has 16 chars or not
+	last_index = len(groups) -1
+	num = len(groups[last_index]) % key_len
+
+	# add padding to the last group if needed
+	if num is not 0:
+		print("padding")
+	else:
+		print("no padding")
+
+	return
 
 # execute program
 if __name__ == "__main__":
