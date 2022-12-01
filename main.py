@@ -17,6 +17,12 @@ def main():
 	# output preprocess
 	output_data("\nPreprocessing:\n", preprocess)
 
+	# encrypt text by substitution using vigenere cypher
+	encrypted = Vcipher_encrypt(preprocess, key)
+
+	# output encrypted text
+	output_data("\nSubstitution:\n", encrypted)
+
 	# end program
 	sys.exit("\n\nProgram ended\n")
 
@@ -45,18 +51,22 @@ def get_text(input_file, key_file):
 		sys.exit()
 
 	# read key from file
-	key = []
+	key_list = []
 	try:
 		file_obj = open(key_file, "r")
 		for line in file_obj:
-			key.append(line)
+			key_list.append(line)
 		file_obj.close()
 	except IOError:
 		print("\nCould not read from: ", key_file)
 		print("\n\nProgram ended\n")
 		sys.exit()
 
-	return message, key
+	# turn list into string
+	key = "".join(key_list)
+	final_key = key.strip()
+
+	return message, final_key
 
 # remove all punctuation marks and whitespace
 def parse_text(message):
@@ -78,14 +88,44 @@ def parse_text(message):
 			new_message.pop(count)
 		count += 1
 
-	return new_message
+	# turn the list into one string
+	final_message = "".join(new_message)
+
+	return final_message
 
 # output information
-def output_data(type, data):
-	print(type)
-	for line in data:
-		print(line)
+def output_data(title, data):
+	print(title)
+	if type(data) is str:
+		print(data)
+	else:
+		for line in data:
+			print(line)
 	return
+
+# encrypt text by substitution using vigenere cypher
+def Vcipher_encrypt(text, key):
+	alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+	size = len(alphabet)
+
+	letter_to_index = dict( zip(alphabet, range(size)) )	# mapping a, b, c, ... to 0, 1, 2, ...
+	index_to_letter = dict( zip(range(size), alphabet) )	# mapping 0, 1, 2, ... to a, b, c, ...
+
+	# split text into groups based on the size of the key
+	group_text = [ text[i:i +len(key)] for i in range(0, len(text), len(key))]
+
+	encrypted_text = ''
+	# traverse through each group then traverse through each letter in each group
+	for group in group_text:
+		count = 0
+		for char in group:
+			# create an index from mapping the current letter in the group with the current letter in the key
+			# encrypt the letter by using that index to get its corresponding letter
+			mapping_index = ( letter_to_index[char] + letter_to_index[key[count]] ) % size
+			encrypted_text += index_to_letter[mapping_index]
+			count +=1
+
+	return encrypted_text
 
 # execute program
 if __name__ == "__main__":
