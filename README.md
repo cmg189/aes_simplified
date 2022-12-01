@@ -90,7 +90,7 @@ get_text(input_file, key_file)
 
 	`message` List containing all text from the input file
 
-	`key` List containing all text from the key file
+	`key` String containing encryption key from the key file
 
 ---
 
@@ -108,12 +108,12 @@ parse_text(message)
 
 - Return:
 
-	`new_message` List containing plaintext with only characters A-Z
+	`final_message` String containing plaintext with only characters A-Z
 
 ---
 
 ``` python
-output_data(type, data)
+output_data(title, data)
 ```
 
 - Description:
@@ -122,13 +122,48 @@ output_data(type, data)
 
 - Parameters:
 
-	`type` String representing what type of step is being outputted
+	`title` String representing which step is being outputted
 
-	`data` List representing the current data being encrypted
+	`data` List, or string, representing the current data being encrypted
 
 - Return:
 
 	None
+
+---
+
+``` python
+Vcipher_encrypt(text, key)
+```
+
+- Description:
+
+	Encryption via the Vigenere cipher using polyalphabetic substitution. Encrypts text using an encryption key
+
+- Parameters:
+
+	`text` String representing text to be encrypted
+
+	`key` String representing the encryption key
+
+- Return:
+
+	`encrypted_text` String representing text that has been encrypted
+
+---
+
+``` python
+```
+
+- Description:
+
+
+
+- Parameters:
+
+
+
+- Return:
 
 ---
 
