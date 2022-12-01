@@ -18,7 +18,7 @@ def main():
 	output_data("\nPreprocessing:\n", preprocess)
 
 	# encrypt text by substitution using vigenere cypher
-	encrypted = Vcipher_encrypt(preprocess, key)
+	cipher_text, cipher_groups = Vcipher_encrypt(preprocess, key)
 
 	# output encrypted text
 	output_data("\nSubstitution:\n", encrypted)
@@ -125,7 +125,11 @@ def Vcipher_encrypt(text, key):
 			encrypted_text += index_to_letter[mapping_index]
 			count +=1
 
-	return encrypted_text
+	# group the encrypted text into groups of size len(key)
+	encrypted_groups = [ encrypted_text[i:i +len(key)] for i in range(0, len(encrypted_text), len(key))]
+
+	return encrypted_text, encrypted_groups
+
 
 # execute program
 if __name__ == "__main__":
