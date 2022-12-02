@@ -181,17 +181,25 @@ padding(text, groups, key_length)
 ---
 
 ``` python
+parity_bit(text, key_length)
 ```
 
 - Description:
 
-
+	Adds parity bit to binary ascii value of each char in text
+	Parity bit is needed if there is an odd number of 1s in binary ascii value
 
 - Parameters:
 
+	`text` String representing padded ciphertext
 
+	`key_length` Int representing size of encryption key
 
 - Return:
+
+	`hex_string` String representing hexadecimal conversions of each char with parity bit added
+
+	`hex_group` List equivalent of `hex_string`
 
 ---
 
