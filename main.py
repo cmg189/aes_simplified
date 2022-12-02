@@ -11,21 +11,17 @@ def main():
 	# read plaintext and key from files
 	message, key = get_text(input_file, key_file)
 
-	# remove all punctuation marks and whitespace
+	# remove all punctuation marks and whitespace then output result and save data
 	preprocess = parse_text(message)
+	output_data("\nPreprocessing:\n", preprocess, len(key))
 
-	# output preprocess
-	output_data("\nPreprocessing:\n", preprocess)
-
-	# encrypt text by substitution using vigenere cypher
+	# encrypt text by substitution using vigenere cypher, output result, and save data
 	cipher_text, cipher_groups = Vcipher_encrypt(preprocess, key)
+	output_data("\nSubstitution:\n", cipher_text, len(key))
 
-	# output encrypted text
-	output_data("\nSubstitution:\n", cipher_text)
-
-	# add padding if necessary
-	#padded_text, padded_groups = padding(cipher_text, cipher_groups, len(key))
-	padding(cipher_text, cipher_groups, len(key))
+	# add padding if necessary, output result, and save data
+	padded_text, padded_groups = padding(cipher_text, cipher_groups, len(key))
+	output_data("\nPadding:\n", padded_groups, len(key))
 
 	# end program
 	sys.exit("\n\nProgram ended\n")
@@ -98,13 +94,26 @@ def parse_text(message):
 	return final_message
 
 # output information
-def output_data(title, data):
+def output_data(title, data, length):
 	print(title)
+
+	# print entire string in one line
 	if type(data) is str:
 		print(data)
 	else:
-		for line in data:
-			print(line)
+		num_cols = 4
+		block_size = length / num_cols
+
+		# print list in blocks of size 4x4
+		for i in range(len(data)):
+			line = data[i]
+			curr_index = 0
+			for j in range(int(block_size)):
+				for k in range(num_cols):
+					print(line[curr_index], end='')
+					curr_index +=1
+				print('')
+			print('')
 	return
 
 # encrypt text by substitution using vigenere cypher
@@ -136,18 +145,30 @@ def Vcipher_encrypt(text, key):
 
 # add padding if necessary
 def padding(text, groups, key_len):
+
 	# check if last group in list has 16 chars or not
 	last_index = len(groups) -1
-	num = len(groups[last_index]) % key_len
+	remainder = len(groups[last_index]) % key_len
 
 	# add padding to the last group if needed
-	if num is not 0:
-		print("padding")
-	else:
-		print("no padding")
+	fill_data = 'A'
+	if remainder != 0:
+		# determine how many spots need to be padded
+		last_block = groups[last_index]
+		fill_amount = key_len - len(last_block)
 
-	return
+		# pad data
+		for count in range(fill_amount):
+			last_block += fill_data
+
+		# update list and create new string with updated data
+		groups.pop(last_index)
+		groups.append(last_block)
+		updated_text = "".join(groups)
+
+		return updated_text, groups
+	else:
+		# return original data if no padding is required
+		return text, groups
 
 # execute program
-if __name__ == "__main__":
-	main()
