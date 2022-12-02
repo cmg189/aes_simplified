@@ -23,6 +23,9 @@ def main():
 	padded_text, padded_groups = padding(cipher_text, cipher_groups, len(key))
 	output_data("\nPadding:\n", padded_groups, len(key))
 
+	# add parity bit if necessary, output result, and save data
+	parity_string, party_group = parity_bit(padded_text, len(key))
+
 	# end program
 	sys.exit("\n\nProgram ended\n")
 
@@ -144,18 +147,18 @@ def Vcipher_encrypt(text, key):
 	return encrypted_text, encrypted_groups
 
 # add padding if necessary
-def padding(text, groups, key_len):
+def padding(text, groups, key_length):
 
 	# check if last group in list has 16 chars or not
 	last_index = len(groups) -1
-	remainder = len(groups[last_index]) % key_len
+	remainder = len(groups[last_index]) % key_length
 
 	# add padding to the last group if needed
 	fill_data = 'A'
 	if remainder != 0:
 		# determine how many spots need to be padded
 		last_block = groups[last_index]
-		fill_amount = key_len - len(last_block)
+		fill_amount = key_length - len(last_block)
 
 		# pad data
 		for count in range(fill_amount):
@@ -171,4 +174,44 @@ def padding(text, groups, key_len):
 		# return original data if no padding is required
 		return text, groups
 
+# add parity bit if necessary
+def parity_bit(text, key_length):
+	# a char requires a parity bit if its binary ascii value contains an odd amount of 1s
+	# party bit of 1 will be added to the most significant bit
+
+	# predetermined which uppercase letters will need a parity bit and the resulting hexadecimal value
+	chars = ['C', 'E', 'F', 'I', 'J', 'L', 'O', 'Q', 'R', 'T', 'W', 'X']
+	hex = ['c3', 'c5', 'c6', 'c9', 'ca', 'cc', 'cf', 'd1', 'd2', 'd4', 'd7', 'd8']
+	bits = dict( zip(chars, hex) )
+
+	hex_string = ''
+	for i in range(len(text)):
+		# replace chars that need parity bit
+		if text[i] in bits:
+			hex_string += bits.get(text[i])
+		# convert chars to hex value if not party bit is needed
+		else:
+			chars_hex = format( ord(text[i]), 'x' )
+			hex_string += chars_hex
+
+	# make list from hex_string
+	hex_group = []
+	count = 0
+	for i in range(key_length):
+		# make list for each row in block (4 elements)
+		block = []
+		for j in range(4):
+			# group chars 2 at a time
+			two_chars = ''
+			two_chars += hex_string[count]
+			two_chars += hex_string[count +1]
+			count += 2
+			block.append(two_chars)
+		hex_group.append(block)
+	
+	return hex_string, hex_group
+
+
 # execute program
+if __name__ == "__main__":
+	main()
