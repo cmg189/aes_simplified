@@ -113,7 +113,7 @@ parse_text(message)
 ---
 
 ``` python
-output_data(title, data)
+output_data(title, data, length)
 ```
 
 - Description:
@@ -125,6 +125,8 @@ output_data(title, data)
 	`title` String representing which step is being outputted
 
 	`data` List, or string, representing the current data being encrypted
+
+	`length` Int representing size of encryption key
 
 - Return:
 
@@ -151,6 +153,30 @@ Vcipher_encrypt(text, key)
 	`encrypted_text` String representing text that has been encrypted
 
 	`encrypted_groups` List representing encrypted text that has been grouped based on the length of the encryption key
+
+---
+
+``` python
+padding(text, groups, key_length)
+```
+
+- Description:
+
+	Adds padding to the data if necessary, if no padding needed returns original text and groups
+
+- Parameters:
+
+	`text` String representing ciphertext
+
+	`groups` List representing ciphertext
+
+	`key_length` Int representing legth of encryption key
+
+- Return:
+
+	`updated_text` String representing padded ciphertext
+
+	`groups` List representing padded ciphertext
 
 ---
 
