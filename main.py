@@ -29,7 +29,12 @@ def main():
 	output_data("\nShifted Rows:\n", shifted_text, len(key))
 
 	# add parity bit if necessary, output and save results
-	parity_string, party_group = parity_bit(padded_text, len(key))
+	parity_text = parity_bit(shifted_text, len(key))
+	output_doubles("\nParity Bit:\n", parity_text, len(key))
+
+	# mix columns
+	#mix_columns(parity_text, len(key))
+	#output_doubles("\nMix Columns:\n", mixed_text, len(key))
 
 	# end program
 	sys.exit("\n\nProgram ended\n")
@@ -101,19 +106,20 @@ def parse_text(message):
 
 	return final_message
 
-# output information
-def output_data(title, data, length):
+# output data by grouping 4x4
+def output_data(title, data, key_size):
 	print(title)
 
 	# print data in 4x4 blocks
 	count = 0
-	for i in range(0, len(data), 16):
+	for i in range(0, len(data), key_size):
 		for j in range(4):
 			for k in range(4):
 				print(data[count], end='')
 				count += 1
 			print('')
 		print('')
+
 	return
 
 # encrypt text by substitution using vigenere cypher
@@ -239,22 +245,33 @@ def parity_bit(text, key_length):
 			chars_hex = format( ord(text[i]), 'x' )
 			hex_string += chars_hex
 
-	# make list from hex_string
-	hex_group = []
-	count = 0
-	for i in range(key_length):
-		# make list for each row in block (4 elements)
-		block = []
-		for j in range(4):
-			# group chars 2 at a time
-			two_chars = ''
-			two_chars += hex_string[count]
-			two_chars += hex_string[count +1]
-			count += 2
-			block.append(two_chars)
-		hex_group.append(block)
+	return hex_string
 
-	return hex_string, hex_group
+# output data by grouping 4x4 and grouping each element by 2
+def output_doubles(title, data, key_size):
+	print(title)
+
+	# print data in 4x4 blocks grouping each output by 2
+	count = 0
+	for i in range(0, len(data), key_size):
+		for j in range(4):
+			for k in range(8):
+				if(count >= len(data)):
+					return
+				print(data[count], end='')
+				count += 1
+				if count % 2 == 0:
+					print(' ', end='')
+			print('')
+		print('')
+
+	return
+
+# mix columns
+def mix_columns(text, key_length):
+	for line in groups:
+		print(line)
+	return
 
 
 # execute program
