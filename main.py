@@ -14,18 +14,19 @@ def main():
 
 	# remove all punctuation marks and whitespace then output and save results
 	preprocess = parse_text(message)
-	output_data("\nPreprocessing:\n", preprocess, len(key))
+	print("\nPreprocessing:\n\n", preprocess, sep='')
 
 	# encrypt text by substitution using vigenere cypher, output and save results
 	cipher_text, cipher_groups = Vcipher_encrypt(preprocess, key)
-	output_data("\nSubstitution:\n", cipher_text, len(key))
+	print("\nSubstitution:\n\n", cipher_text, sep='')
 
 	# add padding if necessary, output and save results
 	padded_text, padded_groups = padding(cipher_text, cipher_groups, len(key))
-	output_data("\nPadding:\n", padded_groups, len(key))
+	output_data("\nPadding:\n", padded_text, len(key))
 
 	# shift rows of groups, output and save results
 	shifted_text, shifted_groups = shift_rows(padded_text, padded_groups, len(key))
+	output_data("\nShifted Rows:\n", shifted_text, len(key))
 
 	# add parity bit if necessary, output and save results
 	parity_string, party_group = parity_bit(padded_text, len(key))
@@ -104,23 +105,15 @@ def parse_text(message):
 def output_data(title, data, length):
 	print(title)
 
-	# print entire string in one line
-	if type(data) is str:
-		print(data)
-	else:
-		num_cols = 4
-		block_size = length / num_cols
-
-		# print list in blocks of size 4x4
-		for i in range(len(data)):
-			line = data[i]
-			curr_index = 0
-			for j in range(int(block_size)):
-				for k in range(num_cols):
-					print(line[curr_index], end='')
-					curr_index +=1
-				print('')
+	# print data in 4x4 blocks
+	count = 0
+	for i in range(0, len(data), 16):
+		for j in range(4):
+			for k in range(4):
+				print(data[count], end='')
+				count += 1
 			print('')
+		print('')
 	return
 
 # encrypt text by substitution using vigenere cypher

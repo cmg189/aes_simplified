@@ -118,13 +118,13 @@ output_data(title, data, length)
 
 - Description:
 
-	Outputs steps in encryption
+	Outputs steps in encryption where data is output in 4x4 blocks
 
 - Parameters:
 
 	`title` String representing which step is being outputted
 
-	`data` List, or string, representing the current data being encrypted
+	`data` String representing the current data being encrypted
 
 	`length` Int representing size of encryption key
 
