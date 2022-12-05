@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import re
+from collections import deque
 
 # main point of execution
 def main():
@@ -11,19 +12,22 @@ def main():
 	# read plaintext and key from files
 	message, key = get_text(input_file, key_file)
 
-	# remove all punctuation marks and whitespace then output result and save data
+	# remove all punctuation marks and whitespace then output and save results
 	preprocess = parse_text(message)
 	output_data("\nPreprocessing:\n", preprocess, len(key))
 
-	# encrypt text by substitution using vigenere cypher, output result, and save data
+	# encrypt text by substitution using vigenere cypher, output and save results
 	cipher_text, cipher_groups = Vcipher_encrypt(preprocess, key)
 	output_data("\nSubstitution:\n", cipher_text, len(key))
 
-	# add padding if necessary, output result, and save data
+	# add padding if necessary, output and save results
 	padded_text, padded_groups = padding(cipher_text, cipher_groups, len(key))
 	output_data("\nPadding:\n", padded_groups, len(key))
 
-	# add parity bit if necessary, output result, and save data
+	# shift rows of groups, output and save results
+	shifted_text, shifted_groups = shift_rows(padded_text, padded_groups, len(key))
+
+	# add parity bit if necessary, output and save results
 	parity_string, party_group = parity_bit(padded_text, len(key))
 
 	# end program
@@ -174,6 +178,54 @@ def padding(text, groups, key_length):
 		# return original data if no padding is required
 		return text, groups
 
+# shift rows
+def shift_rows(text, groups, key_length):
+	num_cols = 4
+	block_size = key_length / num_cols
+
+	# create 2d list of 4x4 blocks
+	collection = []
+	for i in range(len(groups)):
+		block = []
+		line = groups[i]
+		curr_index = 0
+		for j in range(int(block_size)):
+			row = []
+			for k in range(num_cols):
+				row.append(line[curr_index])
+				curr_index +=1
+			block.append(row) # new row of 4 chars
+		collection.append(block) # new group of 4x4
+
+	# shift rows of each block
+	# 1st row: no shift, 2nd row: left 1, 3rd row: left 2, 4th row: left 3
+	shifted_collection = []
+	for block in collection:
+		count = 0
+		shifted_block = []
+		temp_row = []
+		for row in block:
+			new_row = deque(row)
+			if count != 0:
+				new_row.rotate(-count) # rotate entire row left
+			count += 1
+			shifted_block.append(new_row) # saving shifted row
+			temp_char = []
+			for char in new_row:
+				temp_char.append(char) # making new list out of shifted rows
+			temp_row.append(temp_char)
+		shifted_collection.append(temp_row)
+
+	# turn list into one string
+	shifted_text = ''
+	for line in shifted_collection:
+		temp_text = ''
+		for row in line:
+			temp_text = ''.join(row)
+			shifted_text = shifted_text + temp_text
+
+	return shifted_text, shifted_collection
+
 # add parity bit if necessary
 def parity_bit(text, key_length):
 	# a char requires a parity bit if its binary ascii value contains an odd amount of 1s
@@ -208,7 +260,7 @@ def parity_bit(text, key_length):
 			count += 2
 			block.append(two_chars)
 		hex_group.append(block)
-	
+
 	return hex_string, hex_group
 
 
