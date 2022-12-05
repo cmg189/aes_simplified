@@ -170,13 +170,38 @@ padding(text, groups, key_length)
 
 	`groups` List representing ciphertext
 
-	`key_length` Int representing legth of encryption key
+	`key_length` Int representing length of encryption key
 
 - Return:
 
 	`updated_text` String representing padded ciphertext
 
 	`groups` List representing padded ciphertext
+
+---
+
+``` python
+shift_rows(text, groups, key_length)
+```
+
+- Description:
+
+	Shift the rows of each 4x4 block
+	1st row: no shift, 2nd row: left shift 1 position, 3rd row: left shift 2 positions, 4th row: left shift 3 positions
+
+- Parameters:
+
+	`text` String representing ciphertext
+
+	`groups` List representing ciphertext
+
+	`key_length` Int representing length of encryption key
+
+- Return:
+
+	`shifted_text` String representing text that has been shifted accordingly
+
+	`shifted_collections` 2D list of 4x4 blocks of text that has been shifted accordingly
 
 ---
 
