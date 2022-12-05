@@ -113,7 +113,7 @@ parse_text(message)
 ---
 
 ``` python
-output_data(title, data, length)
+output_data(title, data, key_size)
 ```
 
 - Description:
@@ -126,7 +126,7 @@ output_data(title, data, length)
 
 	`data` String representing the current data being encrypted
 
-	`length` Int representing size of encryption key
+	`key_size` Int representing size of encryption key
 
 - Return:
 
@@ -224,11 +224,32 @@ parity_bit(text, key_length)
 
 	`hex_string` String representing hexadecimal conversions of each char with parity bit added
 
-	`hex_group` List equivalent of `hex_string`
+---
+
+``` python
+output_doubles(title, data, key_size)
+```
+
+- Description:
+
+	Outputs data in 4x4 block where each element is grouped by two to represent a hexadecimal value
+
+- Parameters:
+
+	`title` String representing which step is being outputted
+
+	`data` String representing the current data being encrypted
+
+	`key_size` Int representing size of encryption key
+
+- Return:
+
+	None
 
 ---
 
 ``` python
+mix_columns(text, key_length)
 ```
 
 - Description:
@@ -237,9 +258,14 @@ parity_bit(text, key_length)
 
 - Parameters:
 
+	`text` String representing ciphertext
 
+	`groups` List representing ciphertext
+
+	`key_length` Int representing length of encryption key
 
 - Return:
+
 
 ---
 
