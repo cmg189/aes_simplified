@@ -291,17 +291,14 @@ def mix_columns(text, key_length):
 	# hex groups
 	hg = []
 	for i in range(0, len(hex_str), 4):
-		hgr = []
+		hgr = [] # rows
 		count = i
 		for j in range(4):
 			hgr.append(hex_str[count])
 			count +=1
 		hg.append(hgr)
-	for line in hg:
-		print(line)
-	print('')
 
-	# 2d list transformation
+	# 2d list reordering
 	reorder = []
 	for skip in range(0, len(hg), 4):
 		count = skip
@@ -311,44 +308,54 @@ def mix_columns(text, key_length):
 				cols.append(hg[i][j])
 			reorder.append(cols)
 
-	# testing on one column
-	column = reorder[0]
-	tbins = []
-	for i in range(len(column)):
-		prefix_bin = bin(int(column[i], 16))
-		short_bin = prefix_bin[2:]	# removing the prefix 0b of binary number
-		full_bin = short_bin.rjust(8, '0') # ensure all binaries are 8 bits long
-		tbins.append(full_bin)
+	# hex into binary
+	collection = []
+	for column in reorder:
+		tbins = []
+		for i in range(len(column)):
+			prefix_bin = bin(int(column[i], 16))
+			short_bin = prefix_bin[2:]	# removing the prefix 0b of binary number
+			full_bin = short_bin.rjust(8, '0') # ensure all binaries are 8 bits long
+			tbins.append(full_bin)
+		collection.append(tbins)
 
-	columns = tbins
-	# column transformation with rijndael galois field
-	a0 = (int(rgf(columns[0], 2),2) ^ int(rgf(columns[1], 3),2) ^ int(columns[2], 2) ^ int(columns[3], 2))
-	a1 = (int(columns[0], 2) ^ int(rgf(columns[1], 2),2) ^ int(rgf(columns[2], 3),2) ^ int(columns[3], 2))
-	a2 = (int(columns[0], 2) ^ int(columns[1], 2) ^ int(rgf(columns[2], 2),2) ^ int(rgf(columns[3], 3),2))
-	a3 = (int(rgf(columns[0], 3),2) ^ int(columns[1], 2) ^ int(columns[2], 2) ^ int(rgf(columns[3], 2),2))
+	# perform the mix columns procedure
+	transformed = []
+	for columns in collection:
+		# column transformation with rijndael galois field
+		a0 = (int(rgf(columns[0], 2),2) ^ int(rgf(columns[1], 3),2) ^ int(columns[2], 2) ^ int(columns[3], 2))
+		a1 = (int(columns[0], 2) ^ int(rgf(columns[1], 2),2) ^ int(rgf(columns[2], 3),2) ^ int(columns[3], 2))
+		a2 = (int(columns[0], 2) ^ int(columns[1], 2) ^ int(rgf(columns[2], 2),2) ^ int(rgf(columns[3], 3),2))
+		a3 = (int(rgf(columns[0], 3),2) ^ int(columns[1], 2) ^ int(columns[2], 2) ^ int(rgf(columns[3], 2),2))
 
-	a0 = str(a0)
-	a1 = str(a1)
-	a2 = str(a2)
-	a3 = str(a3)
+		store = []
+		a0 = str(a0)
+		a0 = a0.rjust(8, '0')
+		a0 = hex(int(a0))
+		store.append(a0[2:])
 
-	a0 = a0.rjust(8, '0')
-	a1 = a1.rjust(8, '0')
-	a2 = a2.rjust(8, '0')
-	a3 = a3.rjust(8, '0')
+		a1 = str(a1)
+		a1 = a1.rjust(8, '0')
+		a1 = hex(int(a1))
+		store.append(a1[2:])
 
-	na0 = hex(int(a0))
-	na1 = hex(int(a1))
-	na2 = hex(int(a2))
-	na3 = hex(int(a3))
+		a2 = str(a2)
+		a2 = a2.rjust(8, '0')
+		a2 = hex(int(a2))
+		store.append(a2[2:])
 
-	xor = []
-	xor.append(na0[2:])
-	xor.append(na1[2:])
-	xor.append(na2[2:])
-	xor.append(na3[2:])
-	print(xor)
+		a3 = str(a3)
+		a3 = a3.rjust(8, '0')
+		a3 = hex(int(a3))
+		store.append(a3[2:])
 
+		transformed.append(store)
+
+	for line in transformed:
+		print(line)
+
+	# reorder hex values
+	
 
 	return
 
