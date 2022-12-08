@@ -287,4 +287,31 @@ rgf(value, constant)
 
 	`finished` List representing transformed hex values
 
+---
+
+	``` python
+	save_data(title, data, file, flag)
+	```
+
+	- Description:
+
+		Saves data by writing to file specified by user
+
+	- Parameters:
+
+	`title` String representing which step is being outputted
+
+	`data` String representing the current data being encrypted
+
+	`file` String representing the file to output data, specified by user
+
+	`flag` Int representing how to output data
+				 1 indicates to output as a string
+				 2 indicates to output as a 4x4 block of single characters
+				 3 indicates to output as a 4x4 block of two characters
+
+	- Return:
+
+		None
+
 ## Other <a name="other"></a>
