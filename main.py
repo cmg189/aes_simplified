@@ -31,8 +31,8 @@ def main():
 	#output_doubles("\nParity Bit:\n", parity_text, len(key))
 
 	# mix columns
-	mix_columns(parity_text, len(key))
-	#output_doubles("\nMix Columns:\n", mixed_text, len(key))
+	mixed_text = mix_columns(parity_text, len(key))
+	output_doubles("\nMix Columns:\n", mixed_text, len(key))
 
 	# end program
 	sys.exit("\n\nProgram ended\n")
@@ -351,8 +351,6 @@ def mix_columns(text, key_length):
 
 		transformed.append(store)
 
-	#for line in transformed:
-		#print(line)
 
 	# reorder hex values
 	done = []
@@ -364,10 +362,15 @@ def mix_columns(text, key_length):
 				cols.append(transformed[i][j])
 			done.append(cols)
 
-	for line in done:
-		print(line)
+	# turn list into one string
+	one_str = ''
+	for row in done:
+		temp_text = ''
+		for chars in row:
+			temp_text = ''.join(chars)
+			one_str = one_str + temp_text
 
-	return
+	return one_str
 
 def rgf(value, constant):
 
