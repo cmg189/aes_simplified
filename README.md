@@ -254,32 +254,37 @@ mix_columns(text, key_length)
 
 - Description:
 
-
+	Rearranges 2d list (4x4) and passes one column (size 4) to `rgf()` to be transformed
+	After transformation reorder transformed values to their original positions
 
 - Parameters:
 
 	`text` String representing ciphertext
 
-	`groups` List representing ciphertext
-
 	`key_length` Int representing length of encryption key
 
 - Return:
 
+	`one_str` String representing transformed hex values in their original positions
 
 ---
 
 ``` python
+rgf(value, constant)
 ```
 
 - Description:
 
-
+	Performs multiplication by using Rijndael Galois field
 
 - Parameters:
 
+	`value` List of hex values representing a single column (size 4) in 2d list
 
+	`constant` Int representing what multiplicand
 
 - Return:
+
+	`finished` List representing transformed hex values
 
 ## Other <a name="other"></a>
