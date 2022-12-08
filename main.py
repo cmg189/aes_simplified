@@ -351,11 +351,21 @@ def mix_columns(text, key_length):
 
 		transformed.append(store)
 
-	for line in transformed:
-		print(line)
+	#for line in transformed:
+		#print(line)
 
 	# reorder hex values
-	
+	done = []
+	for skip in range(0, len(transformed), 4):
+		count = skip
+		for j in range(4):
+			cols = []
+			for i in range(count, count+4):
+				cols.append(transformed[i][j])
+			done.append(cols)
+
+	for line in done:
+		print(line)
 
 	return
 
@@ -365,39 +375,36 @@ def rgf(value, constant):
 	xor_value = bin(int(xor_value, 2))
 	xor_value = xor_value[2:]
 	xor_value = xor_value.rjust(8, '0')
-	#print("val = ", value)
 
 	extra_step = 0 # msb is 0
 	if value[0] == '1':
 		extra_step = 1 # msb is 1
 
 	shifted = int(value,2) << 1 # multiply by 2
-	#print("x2 = ",shifted)
 	shifted = bin(int(shifted))
+	# account for shift in binary number if msb is 0
+	# 01110011 becomes 110011
 	if len(shifted) == 11:
 		shifted = shifted[3:]
 	elif len(shifted) == 10:
 		shifted = shifted[2:]
 
-
+	# multiplying by 2 or 3
 	if constant == 2:
 		finished = shifted
 	else:
 		finished = int(shifted, 2) ^ int(value, 2)
-		#print("sum = ",finished)
 		finished = bin(finished)
 		finished = finished[2:]
 
-	# checking msb
+	# perform another xor
 	if extra_step:
 		finished = int(finished,2) ^ int(xor_value,2)
-		#print("^27 = ", finished)
 		finished = str(finished)
 		finished = bin(int(finished))
 		finished = finished[2:]  # remove 0b prefix and ensure 8bits
 		finished = finished.rjust(8, '0')
 
-	#print(finished, '\n')
 	return finished
 
 # execute program
