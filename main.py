@@ -12,27 +12,33 @@ def main():
 
 	# remove all punctuation marks and whitespace then output and save results
 	preprocess = parse_text(message)
-	#print("\nPreprocessing:\n\n", preprocess, sep='')
+	print("\nPreprocessing:\n\n", preprocess, sep='')
+	save_data("\nPreprocessing:\n\n", preprocess, output_file, '1')
 
 	# encrypt text by substitution using vigenere cypher, output and save results
 	cipher_text, cipher_groups = Vcipher_encrypt(preprocess, key)
-	#print("\nSubstitution:\n\n", cipher_text, sep='')
+	print("\nSubstitution:\n\n", cipher_text, sep='')
+	save_data("\nSubstitution:\n\n", cipher_text, output_file, '1')
 
 	# add padding if necessary, output and save results
 	padded_text, padded_groups = padding(cipher_text, cipher_groups, len(key))
-	#output_data("\nPadding:\n", padded_text, len(key))
+	output_data("\nPadding:\n", padded_text, len(key))
+	save_data("\nPadding:\n\n", padded_text, output_file, '2')
 
 	# shift rows of groups, output and save results
 	shifted_text, shifted_groups = shift_rows(padded_text, padded_groups, len(key))
-	#output_data("\nShifted Rows:\n", shifted_text, len(key))
+	output_data("\nShifted Rows:\n", shifted_text, len(key))
+	save_data("\nShifted Rows:\n\n", shifted_text, output_file, '2')
 
 	# add parity bit if necessary, output and save results
 	parity_text = parity_bit(shifted_text, len(key))
-	#output_doubles("\nParity Bit:\n", parity_text, len(key))
+	output_doubles("\nParity Bit:\n", parity_text, len(key))
+	save_data("\nParity Bit:\n\n", parity_text, output_file, '3')
 
 	# mix columns
 	mixed_text = mix_columns(parity_text, len(key))
 	output_doubles("\nMix Columns:\n", mixed_text, len(key))
+	save_data("\nMix Columns:\n\n", mixed_text, output_file, '3')
 
 	# end program
 	sys.exit("\n\nProgram ended\n")
@@ -372,6 +378,7 @@ def mix_columns(text, key_length):
 
 	return one_str
 
+# perform multiplication
 def rgf(value, constant):
 
 	xor_value = '00011011'
@@ -409,6 +416,59 @@ def rgf(value, constant):
 		finished = finished.rjust(8, '0')
 
 	return finished
+
+# write data to file
+def save_data(title, data, file, flag):
+
+	try:
+		file_obj = open(file, "a")
+	except IOError:
+		print("\nCould not write to: ", file)
+		print("\nProgram ended\n")
+		sys.exit()
+
+	if flag == '1':
+		file_obj.write(title)
+		file_obj.write(data)
+		file_obj.write('\n')
+	if flag == '2':
+		file_obj.write(title)
+		# print data in 4x4 blocks
+		count = 0
+		for i in range(0, len(data), 16):
+			for j in range(4):
+				for k in range(4):
+					#file_obj.write(data[count], end='')
+					file_obj.write(data[count])
+					file_obj.write(' ')
+					count += 1
+				file_obj.write('\n')
+			file_obj.write('\n')
+		file_obj.write('\n')
+	if flag == '3':
+		file_obj.write(title)
+		# print data in 4x4 blocks grouping each output by 2
+		count = 0
+		for i in range(0, len(data), 16):
+			for j in range(4):
+				for k in range(8):
+					if(count >= len(data)):
+						return
+					#file_obj.write(data[count], end='')
+					file_obj.write(data[count])
+					count += 1
+					if count % 2 == 0:
+						#file_obj.write(' ', end='')
+						file_obj.write(' ')
+						#file_obj.write('\n')
+				file_obj.write('\n')
+			file_obj.write('\n')
+		file_obj.write('\n')
+
+
+	file_obj.close()
+	return
+
 
 # execute program
 if __name__ == "__main__":
