@@ -268,12 +268,12 @@ def output_doubles(title, data, key_size):
 # mix columns
 def mix_columns(text, key_length):
 	# group text by 2 chars to represent hex
-	hex = [(text[i:i+2]) for i in range(0, len(text), 2)]
+	hex_str = [(text[i:i+2]) for i in range(0, len(text), 2)]
 
 	# turn hex into binary
 	bins = []
-	for i in range(len(hex)):
-		prefix_bin = bin(int(hex[i], 16))
+	for i in range(len(hex_str)):
+		prefix_bin = bin(int(hex_str[i], 16))
 		short_bin = prefix_bin[2:]	# removing the prefix 0b of binary number
 		full_bin = short_bin.rjust(8, '0') # ensure all binaries are 8 bits long
 		bins.append(full_bin)
@@ -288,108 +288,110 @@ def mix_columns(text, key_length):
 			count +=1
 		bin_groups.append(bin_row)
 
-	#
-	#	FIX ME: ONLY LOOPS THROUGH ENTIRE FIRST COLUMN
-	#			MUST LOOP THROUGH ALL COLUMNS
-	#
-	# traverse all bin_groups by groups of 4 representing 4x4 block size
-	mixed_cols = []
-	for i in range(0, len(bin_groups), 4):
+	# hex groups
+	hg = []
+	for i in range(0, len(hex_str), 4):
+		hgr = []
 		count = i
-		# traverse each column in the 4x4 group, start of new 4x4 block
-		for cols in range(4):
-			# 0c, 1c, 2c, 3c
-			temp = []
-			for row in range(count, count+4):
-				#print("[", row, "] [", cols, "]")
-				# r0, r0, r0, r0
-				temp.append( bin_groups[row][cols] )
-			transformed = RGF_multiples(temp)
-			mixed_cols.append(transformed)
+		for j in range(4):
+			hgr.append(hex_str[count])
+			count +=1
+		hg.append(hgr)
+	for line in hg:
+		print(line)
+	print('')
+
+	# 2d list transformation
+	reorder = []
+	for skip in range(0, len(hg), 4):
+		count = skip
+		for j in range(4):
+			cols = []
+			for i in range(count, count+4):
+				cols.append(hg[i][j])
+			reorder.append(cols)
+
+	# testing on one column
+	column = reorder[0]
+	tbins = []
+	for i in range(len(column)):
+		prefix_bin = bin(int(column[i], 16))
+		short_bin = prefix_bin[2:]	# removing the prefix 0b of binary number
+		full_bin = short_bin.rjust(8, '0') # ensure all binaries are 8 bits long
+		tbins.append(full_bin)
+
+	columns = tbins
+	# column transformation with rijndael galois field
+	a0 = (int(rgf(columns[0], 2),2) ^ int(rgf(columns[1], 3),2) ^ int(columns[2], 2) ^ int(columns[3], 2))
+	a1 = (int(columns[0], 2) ^ int(rgf(columns[1], 2),2) ^ int(rgf(columns[2], 3),2) ^ int(columns[3], 2))
+	a2 = (int(columns[0], 2) ^ int(columns[1], 2) ^ int(rgf(columns[2], 2),2) ^ int(rgf(columns[3], 3),2))
+	a3 = (int(rgf(columns[0], 3),2) ^ int(columns[1], 2) ^ int(columns[2], 2) ^ int(rgf(columns[3], 2),2))
+
+	a0 = str(a0)
+	a1 = str(a1)
+	a2 = str(a2)
+	a3 = str(a3)
+
+	a0 = a0.rjust(8, '0')
+	a1 = a1.rjust(8, '0')
+	a2 = a2.rjust(8, '0')
+	a3 = a3.rjust(8, '0')
+
+	na0 = hex(int(a0))
+	na1 = hex(int(a1))
+	na2 = hex(int(a2))
+	na3 = hex(int(a3))
+
+	xor = []
+	xor.append(na0[2:])
+	xor.append(na1[2:])
+	xor.append(na2[2:])
+	xor.append(na3[2:])
+	print(xor)
 
 
-	# 00, 01, 02, 03
-	# 10, 11, 12, 13
-	# 20, 21, 22, 23
-	# 30, 31, 32, 33
-	print(mixed_cols)
 	return
 
+def rgf(value, constant):
 
-# multiplication with Rijndael's Galois Field
-def RGF_multiples(columns):
-	msb1 = '00011011'
-	rgf = [ [2, 3, 1, 1], [1, 2, 3, 1], [1, 1, 2, 3], [3, 1, 1, 2] ]
+	xor_value = '00011011'
+	xor_value = bin(int(xor_value, 2))
+	xor_value = xor_value[2:]
+	xor_value = xor_value.rjust(8, '0')
+	#print("val = ", value)
 
-	sum = []
-	#
-	#	FIX ME: MUST TRAVERSE THROUGH ENTIRE RGF NOT JUST ONE INDEX
-	#
-	line = rgf[0]
-	for i in range(len(line)):
-		if line[i] == 1:
-			sum.append(columns[i])
-		elif line[i] == 2:
-			shifted_bin = int(columns[i], 2) << 1
-			shifted_str = bin(int(shifted_bin))
-			if len(shifted_str) == 10:
-				# necessary bc if the most significant bit is 0 it will be discarded
-				# therefore need to add it back on there so that the shifted_str[3:] works
-				temp_str = '0b0'
-				temp_str += shifted_str[2:]
-				shifted_str = temp_str
-			shifted_str = shifted_str[3:] # remove 0b and the most significant bit
-			if shifted_str[0] == '1':
-				# must turn into binary
-				shifted_str = int(shifted_str,2) ^ int(msb1,2)
-				final_shift = bin(int(shifted_str))
-				final_shift = final_shift[2:]
-				sum.append(final_shift)
-			else:
-				sum.append(shifted_str) # do nothing, already in binary
-		elif line[i] == 3:
-			shifted_bin = int(columns[i], 2) << 1
-			shifted_str = bin(int(shifted_bin))
-			if len(shifted_str) == 10:
-				# necessary bc if the most significant bit is 0 it will be discarded
-				# therefore need to add it back on there so that the shifted_str[3:] works
-				temp_str = '0b0'
-				temp_str += shifted_str[2:]
-				shifted_str = temp_str
-			shifted_str = shifted_str[3:] # remove 0b and the most significant bit
-			temp = int(shifted_str,2) ^ int(columns[i],2)
-			x = bin(int(temp))
-			x = x[2:]
-			x = x.rjust(8, '0')
-			if x[0] == '1':
-				# must turn into binary
-				x = int(x,2) ^ int(msb1,2)
-				final_shift = bin(int(x))
-				final_shift = final_shift[2:]
-				sum.append(final_shift)
-			else:
-				sum.append(x) # do nothing, already in binary
+	extra_step = 0 # msb is 0
+	if value[0] == '1':
+		extra_step = 1 # msb is 1
 
-	# XOR all resulting binaries
-	first = int(sum[0],2) ^ int(sum[1],2)
-	first = bin(int(first))
-	first = first[2:]
+	shifted = int(value,2) << 1 # multiply by 2
+	#print("x2 = ",shifted)
+	shifted = bin(int(shifted))
+	if len(shifted) == 11:
+		shifted = shifted[3:]
+	elif len(shifted) == 10:
+		shifted = shifted[2:]
 
-	second = int(first,2) ^ int(sum[2],2)
-	second = bin(int(second))
-	second = second[2:]
 
-	third = int(second,2) ^ int(sum[3],2)
-	third = bin(int(third))
-	third = third[2:]
-	third = third.rjust(8, '0')
+	if constant == 2:
+		finished = shifted
+	else:
+		finished = int(shifted, 2) ^ int(value, 2)
+		#print("sum = ",finished)
+		finished = bin(finished)
+		finished = finished[2:]
 
-	# turn result from XOR to hex
-	bin_result = int(third,2)
-	hex_result = hex(bin_result)
-	hex_result = hex_result[2:]
+	# checking msb
+	if extra_step:
+		finished = int(finished,2) ^ int(xor_value,2)
+		#print("^27 = ", finished)
+		finished = str(finished)
+		finished = bin(int(finished))
+		finished = finished[2:]  # remove 0b prefix and ensure 8bits
+		finished = finished.rjust(8, '0')
 
-	return hex_result
+	#print(finished, '\n')
+	return finished
 
 # execute program
 if __name__ == "__main__":
