@@ -14,34 +14,30 @@ def main():
 	# remove all punctuation marks and whitespace then output and save results
 	preprocess = parse_text(message)
 	#print("\nPreprocessing:\n\n", preprocess, sep='')
-	#save_data("\nPreprocessing:\n\n", preprocess, output_file, '1')
 
-	# encrypt text by substitution using vigenere cypher, output and save results
+	# encrypt text by substitution using vigenere cypher
 	cipher_text = Vcipher_encrypt(preprocess, key)
 	#print("\nSubstitution:\n\n", cipher_text, sep='')
-	#save_data("\nSubstitution:\n\n", cipher_text, output_file, '1')
 
-	# add padding if necessary, output and save results
+	# add padding if necessary
 	padded_text = padding(cipher_text, len(key))
 	#output_data("\nPadding:\n", padded_text, len(key))
-	#save_data("\nPadding:\n\n", padded_text, output_file, '2')
 	
-	# shift rows of groups, output and save results
+	# shift rows of groups
 	shifted_text = shift_rows(padded_text, len(key))
 	#output_data("\nShifted Rows:\n", shifted_text, len(key))
-	#save_data("\nShifted Rows:\n\n", shifted_text, output_file, '2')
 
-	# add parity bit if necessary, output and save results
+	# add parity bit if necessary
 	parity_text = parity_bit(shifted_text, len(key))
 	#output_doubles("\nParity Bit:\n", parity_text, len(key))
-	#save_data("\nParity Bit:\n\n", parity_text, output_file, '3')
 
 	# mix columns
 	mixed_text = mix_columns(parity_text, len(key))
 	#output_doubles("\nMix Columns:\n", mixed_text, len(key))
-	#save_data("\nMix Columns:\n\n", mixed_text, output_file, '3')
 	
 	output_results(message, mixed_text, key)
+
+	save_data(mixed_text)
 
 	# end program
 	sys.exit("\n\nProgram ended\n")
@@ -51,7 +47,7 @@ def get_files():
 	print("\n\n\t\t\tAES Simplified\n\n")
 	print("Enter the file name containing the plaintext to be encrypted")
 	input_file = input("> ")
-	print("\nEnter the name of the input file containing the encryption key: ")
+	print("\nEnter the file name containing the encryption key: ")
 	key_file = input("> ")
 
 	return input_file, key_file
@@ -429,53 +425,40 @@ def rgf(value, constant):
 	return finished
 
 # write data to file
-def save_data(title, data, file, flag):
+def save_data(text):
 
-	try:
-		file_obj = open(file, "a")
-	except IOError:
-		print("\nCould not write to: ", file)
-		print("\nProgram ended\n")
-		sys.exit()
+	print("\nWould you like to save this encrypted text to a file (Y/N)")
+	choice = input("> ")
 
-	if flag == '1':
-		file_obj.write(title)
-		file_obj.write(data)
-		file_obj.write('\n')
-	if flag == '2':
-		file_obj.write(title)
-		# print data in 4x4 blocks
-		count = 0
-		for i in range(0, len(data), 16):
-			for j in range(4):
-				for k in range(4):
-					file_obj.write(data[count])
-					file_obj.write(' ')
-					count += 1
-				file_obj.write('\n')
-			file_obj.write('\n')
-		file_obj.write('\n')
-	if flag == '3':
-		file_obj.write(title)
-		# print data in 4x4 blocks grouping each output by 2
-		count = 0
-		for i in range(0, len(data), 16):
-			for j in range(4):
-				for k in range(8):
-					if(count >= len(data)):
-						return
-					#file_obj.write(data[count], end='')
-					file_obj.write(data[count])
-					count += 1
-					if count % 2 == 0:
-						#file_obj.write(' ', end='')
-						file_obj.write(' ')
-						#file_obj.write('\n')
-				file_obj.write('\n')
-			file_obj.write('\n')
-		file_obj.write('\n')
+	if choice == 'Y' or 'y':
+		print("\nEnter the file name to save the encrypted text")
+		file = input("> ")
+		try:
+			file_obj = open(file, "w")
+		except IOError:
+			print("\nCould not write to: ", file)
+			return
+		file_obj.write(text)
+		file_obj.close()
+		print("\nData saved\n")
+		return
+	elif choice == 'Yes' or 'yes':
+		print("\nEnter the file name to save the encrypted text")
+		file = input("> ")
+		try:
+			file_obj = open(file, "w")
+		except IOError:
+			print("\nCould not write to: ", file)
+			return
+		file_obj.write(text)
+		file_obj.close()
+		print("\nData saved\n")
+		return
+	elif (choice == 'N') or (choice == 'n'):
+		return
+	else:
+		print("\nInvalid choice")
 
-	file_obj.close()
 	return
 
 # output results to user
