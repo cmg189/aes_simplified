@@ -179,7 +179,7 @@ padding(text, key_length)
 ---
 
 ``` python
-shift_rows(text, groups, key_length)
+shift_rows(text, key_length)
 ```
 
 - Description:
@@ -190,8 +190,6 @@ shift_rows(text, groups, key_length)
 - Parameters:
 
 	`text` String representing ciphertext
-
-	`groups` List representing ciphertext
 
 	`key_length` Int representing length of encryption key
 
