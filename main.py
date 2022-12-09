@@ -2,6 +2,7 @@
 import sys
 import re
 from collections import deque
+import itertools
 
 # main point of execution
 def main():
@@ -21,12 +22,12 @@ def main():
 	#save_data("\nSubstitution:\n\n", cipher_text, output_file, '1')
 
 	# add padding if necessary, output and save results
-	padded_text, padded_groups = padding(cipher_text, len(key))
+	padded_text = padding(cipher_text, len(key))
 	#output_data("\nPadding:\n", padded_text, len(key))
 	#save_data("\nPadding:\n\n", padded_text, output_file, '2')
 	
 	# shift rows of groups, output and save results
-	shifted_text, shifted_groups = shift_rows(padded_text, padded_groups, len(key))
+	shifted_text, shifted_groups = shift_rows(padded_text, len(key))
 	#output_data("\nShifted Rows:\n", shifted_text, len(key))
 	#save_data("\nShifted Rows:\n\n", shifted_text, output_file, '2')
 
@@ -179,25 +180,30 @@ def padding(text, key_length):
 		groups.append(last_block)
 		updated_text = "".join(groups)
 
-		return updated_text, groups
+		return updated_text
 	else:
 		# return original data if no padding is required
-		return text, groups
+		return text
 
 # shift rows
-def shift_rows(text, groups, key_length):
+def shift_rows(text, key_length):
 	num_cols = 4
 	block_size = key_length / num_cols
-
+	
+	# group the text by 16 chars
+	groups = [text[i:i+16] for i in range(0, len(text), 16)]
+	
 	# create 2d list of 4x4 blocks
 	collection = []
 	for i in range(len(groups)):
 		block = []
 		line = groups[i]
+		#print(line)
 		curr_index = 0
 		for j in range(int(block_size)):
 			row = []
 			for k in range(num_cols):
+				#print(curr_index)
 				row.append(line[curr_index])
 				curr_index +=1
 			block.append(row) # new row of 4 chars
@@ -229,6 +235,9 @@ def shift_rows(text, groups, key_length):
 		for row in line:
 			temp_text = ''.join(row)
 			shifted_text = shifted_text + temp_text
+
+	for line in shifted_collection:
+		print(line)
 
 	return shifted_text, shifted_collection
 
