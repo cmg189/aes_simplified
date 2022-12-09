@@ -8,7 +8,7 @@ import itertools
 def main():
 
 	# receive filenames from user and read plaintext and key
-	input_file, key_file, output_file = get_files()
+	input_file, key_file = get_files()
 	message, key = get_text(input_file, key_file)
 
 	# remove all punctuation marks and whitespace then output and save results
@@ -49,11 +49,12 @@ def main():
 # receives filenames from user
 def get_files():
 	print("\n\n\t\t\tAES Simplified\n\n")
-	input_file = input("Enter the name of the input file containing the plaintext: ")
-	key_file = input("\nEnter the name of the input file containing the encryption key: ")
-	output_file = input("\nEnter the name of the output file that will contain the cyphertext: ")
+	print("Enter the file name containing the plaintext to be encrypted")
+	input_file = input("> ")
+	print("\nEnter the name of the input file containing the encryption key: ")
+	key_file = input("> ")
 
-	return input_file, key_file, output_file
+	return input_file, key_file
 
 # read plaintext and key from files
 def get_text(input_file, key_file):
@@ -482,7 +483,7 @@ def output_results(pre, post, key):
 	print("\nEncrypting:")
 	for line in pre:
 		print(line)
-	print("Using the key:")
+	print("Using the encryption key:")
 	print(key)
 	print("\nResult:")
 	print(post)
