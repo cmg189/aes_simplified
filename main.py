@@ -27,7 +27,7 @@ def main():
 	#save_data("\nPadding:\n\n", padded_text, output_file, '2')
 	
 	# shift rows of groups, output and save results
-	shifted_text, shifted_groups = shift_rows(padded_text, len(key))
+	shifted_text = shift_rows(padded_text, len(key))
 	#output_data("\nShifted Rows:\n", shifted_text, len(key))
 	#save_data("\nShifted Rows:\n\n", shifted_text, output_file, '2')
 
@@ -40,6 +40,8 @@ def main():
 	mixed_text = mix_columns(parity_text, len(key))
 	#output_doubles("\nMix Columns:\n", mixed_text, len(key))
 	#save_data("\nMix Columns:\n\n", mixed_text, output_file, '3')
+	
+	output_results(message, mixed_text, key)
 
 	# end program
 	sys.exit("\n\nProgram ended\n")
@@ -190,8 +192,8 @@ def shift_rows(text, key_length):
 	num_cols = 4
 	block_size = key_length / num_cols
 	
-	# group the text by 16 chars
-	groups = [text[i:i+16] for i in range(0, len(text), 16)]
+	# group the text by key_length
+	groups = [text[i:i+16] for i in range(0, len(text), key_length)]
 	
 	# create 2d list of 4x4 blocks
 	collection = []
@@ -203,7 +205,6 @@ def shift_rows(text, key_length):
 		for j in range(int(block_size)):
 			row = []
 			for k in range(num_cols):
-				#print(curr_index)
 				row.append(line[curr_index])
 				curr_index +=1
 			block.append(row) # new row of 4 chars
@@ -236,10 +237,7 @@ def shift_rows(text, key_length):
 			temp_text = ''.join(row)
 			shifted_text = shifted_text + temp_text
 
-	for line in shifted_collection:
-		print(line)
-
-	return shifted_text, shifted_collection
+	return shifted_text
 
 # add parity bit if necessary
 def parity_bit(text, key_length):
@@ -450,7 +448,6 @@ def save_data(title, data, file, flag):
 		for i in range(0, len(data), 16):
 			for j in range(4):
 				for k in range(4):
-					#file_obj.write(data[count], end='')
 					file_obj.write(data[count])
 					file_obj.write(' ')
 					count += 1
@@ -477,10 +474,18 @@ def save_data(title, data, file, flag):
 			file_obj.write('\n')
 		file_obj.write('\n')
 
-
 	file_obj.close()
 	return
 
+# output results to user
+def output_results(pre, post, key):
+	print("\nEncrypting:")
+	for line in pre:
+		print(line)
+	print("Using the key:")
+	print(key)
+	print("\nResult:")
+	print(post)
 
 # execute program
 if __name__ == "__main__":
