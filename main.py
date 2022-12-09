@@ -12,33 +12,33 @@ def main():
 
 	# remove all punctuation marks and whitespace then output and save results
 	preprocess = parse_text(message)
-	print("\nPreprocessing:\n\n", preprocess, sep='')
-	save_data("\nPreprocessing:\n\n", preprocess, output_file, '1')
+	#print("\nPreprocessing:\n\n", preprocess, sep='')
+	#save_data("\nPreprocessing:\n\n", preprocess, output_file, '1')
 
 	# encrypt text by substitution using vigenere cypher, output and save results
-	cipher_text, cipher_groups = Vcipher_encrypt(preprocess, key)
-	print("\nSubstitution:\n\n", cipher_text, sep='')
-	save_data("\nSubstitution:\n\n", cipher_text, output_file, '1')
+	cipher_text = Vcipher_encrypt(preprocess, key)
+	#print("\nSubstitution:\n\n", cipher_text, sep='')
+	#save_data("\nSubstitution:\n\n", cipher_text, output_file, '1')
 
 	# add padding if necessary, output and save results
-	padded_text, padded_groups = padding(cipher_text, cipher_groups, len(key))
-	output_data("\nPadding:\n", padded_text, len(key))
-	save_data("\nPadding:\n\n", padded_text, output_file, '2')
-
+	padded_text, padded_groups = padding(cipher_text, len(key))
+	#output_data("\nPadding:\n", padded_text, len(key))
+	#save_data("\nPadding:\n\n", padded_text, output_file, '2')
+	
 	# shift rows of groups, output and save results
 	shifted_text, shifted_groups = shift_rows(padded_text, padded_groups, len(key))
-	output_data("\nShifted Rows:\n", shifted_text, len(key))
-	save_data("\nShifted Rows:\n\n", shifted_text, output_file, '2')
+	#output_data("\nShifted Rows:\n", shifted_text, len(key))
+	#save_data("\nShifted Rows:\n\n", shifted_text, output_file, '2')
 
 	# add parity bit if necessary, output and save results
 	parity_text = parity_bit(shifted_text, len(key))
-	output_doubles("\nParity Bit:\n", parity_text, len(key))
-	save_data("\nParity Bit:\n\n", parity_text, output_file, '3')
+	#output_doubles("\nParity Bit:\n", parity_text, len(key))
+	#save_data("\nParity Bit:\n\n", parity_text, output_file, '3')
 
 	# mix columns
 	mixed_text = mix_columns(parity_text, len(key))
-	output_doubles("\nMix Columns:\n", mixed_text, len(key))
-	save_data("\nMix Columns:\n\n", mixed_text, output_file, '3')
+	#output_doubles("\nMix Columns:\n", mixed_text, len(key))
+	#save_data("\nMix Columns:\n\n", mixed_text, output_file, '3')
 
 	# end program
 	sys.exit("\n\nProgram ended\n")
@@ -151,10 +151,13 @@ def Vcipher_encrypt(text, key):
 	# group the encrypted text into groups of size len(key)
 	encrypted_groups = [ encrypted_text[i:i +len(key)] for i in range(0, len(encrypted_text), len(key))]
 
-	return encrypted_text, encrypted_groups
+	return encrypted_text
 
 # add padding if necessary
-def padding(text, groups, key_length):
+def padding(text, key_length):
+
+	# group the encrypted text into groups of size len(key)
+	groups = [ text[i:i +key_length] for i in range(0, len(text), key_length)]
 
 	# check if last group in list has 16 chars or not
 	last_index = len(groups) -1
