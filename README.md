@@ -310,4 +310,27 @@ rgf(value, constant)
 
 		None
 
+---
+
+``` python
+output_results(pre, post, key)
+```
+
+- Description:
+
+	Outputs the results of encryption 
+
+- Parameters:
+
+	`pre` List representing text to be encrypted
+
+	`post` String representing encrypted text
+
+	`key` String representing encryption key
+ 
+- Return:
+
+	None
+
+
 ## Other <a name="other"></a>
