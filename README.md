@@ -152,12 +152,10 @@ Vcipher_encrypt(text, key)
 
 	`encrypted_text` String representing text that has been encrypted
 
-	`encrypted_groups` List representing encrypted text that has been grouped based on the length of the encryption key
-
 ---
 
 ``` python
-padding(text, groups, key_length)
+padding(text, key_length)
 ```
 
 - Description:
