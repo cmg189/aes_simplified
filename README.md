@@ -289,11 +289,11 @@ rgf(value, constant)
 save_data(title, data, file, flag)
 ```
 
-	- Description:
+- Description:
 
-		Saves data by writing to file specified by user
+	Saves data by writing to file specified by user
 
-	- Parameters:
+- Parameters:
 
 	`title` String representing which step is being outputted
 
@@ -306,9 +306,9 @@ save_data(title, data, file, flag)
 				 2 indicates to output as a 4x4 block of single characters
 				 3 indicates to output as a 4x4 block of two characters
 
-	- Return:
+- Return:
 
-		None
+	None
 
 ---
 
