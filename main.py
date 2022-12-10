@@ -3,6 +3,8 @@ import sys
 import re
 from collections import deque
 import itertools
+import codecs
+import binascii
 
 # main point of execution
 def main():
@@ -11,32 +13,28 @@ def main():
 	input_file, key_file = get_files()
 	message, key = get_text(input_file, key_file)
 
-	# remove all punctuation marks and whitespace then output and save results
+	# remove all punctuation marks and whitespace
 	preprocess = parse_text(message)
-	#print("\nPreprocessing:\n\n", preprocess, sep='')
 
 	# encrypt text by substitution using vigenere cypher
 	cipher_text = Vcipher_encrypt(preprocess, key)
-	#print("\nSubstitution:\n\n", cipher_text, sep='')
 
 	# add padding if necessary
 	padded_text = padding(cipher_text, len(key))
-	#output_data("\nPadding:\n", padded_text, len(key))
-	
+
 	# shift rows of groups
 	shifted_text = shift_rows(padded_text, len(key))
-	#output_data("\nShifted Rows:\n", shifted_text, len(key))
 
 	# add parity bit if necessary
 	parity_text = parity_bit(shifted_text, len(key))
-	#output_doubles("\nParity Bit:\n", parity_text, len(key))
 
-	# mix columns
+	# add diffusion
 	mixed_text = mix_columns(parity_text, len(key))
-	#output_doubles("\nMix Columns:\n", mixed_text, len(key))
-	
+
+	# output encrypted text
 	output_results(message, mixed_text, key)
 
+	# option to save encrypted text to file
 	save_data(mixed_text)
 
 	# end program
@@ -47,7 +45,7 @@ def get_files():
 	print("\n\n\t\t\tAES Simplified\n\n")
 	print("Enter the file name containing the plaintext to be encrypted")
 	input_file = input("> ")
-	print("\nEnter the file name containing the encryption key: ")
+	print("\nEnter the file name containing the encryption key")
 	key_file = input("> ")
 
 	return input_file, key_file
@@ -188,10 +186,10 @@ def padding(text, key_length):
 def shift_rows(text, key_length):
 	num_cols = 4
 	block_size = key_length / num_cols
-	
+
 	# group the text by key_length
 	groups = [text[i:i+16] for i in range(0, len(text), key_length)]
-	
+
 	# create 2d list of 4x4 blocks
 	collection = []
 	for i in range(len(groups)):
@@ -424,43 +422,6 @@ def rgf(value, constant):
 
 	return finished
 
-# write data to file
-def save_data(text):
-
-	print("\nWould you like to save this encrypted text to a file (Y/N)")
-	choice = input("> ")
-
-	if choice == 'Y' or 'y':
-		print("\nEnter the file name to save the encrypted text")
-		file = input("> ")
-		try:
-			file_obj = open(file, "w")
-		except IOError:
-			print("\nCould not write to: ", file)
-			return
-		file_obj.write(text)
-		file_obj.close()
-		print("\nData saved\n")
-		return
-	elif choice == 'Yes' or 'yes':
-		print("\nEnter the file name to save the encrypted text")
-		file = input("> ")
-		try:
-			file_obj = open(file, "w")
-		except IOError:
-			print("\nCould not write to: ", file)
-			return
-		file_obj.write(text)
-		file_obj.close()
-		print("\nData saved\n")
-		return
-	elif (choice == 'N') or (choice == 'n'):
-		return
-	else:
-		print("\nInvalid choice")
-
-	return
-
 # output results to user
 def output_results(pre, post, key):
 	print("\nEncrypting:")
@@ -470,6 +431,36 @@ def output_results(pre, post, key):
 	print(key)
 	print("\nResult:")
 	print(post)
+
+	return
+
+# write data to file
+def save_data(text):
+
+	# data will be saved if user enters either one of these stings
+	# Y y Yes yes
+	print("\nWould you like to save this encrypted text to a file (Y/N)")
+	choice = input("> ")
+
+	if choice == 'Y' or choice == 'y' or choice == 'Yes' or choice == 'yes':
+		print("\nEnter the file name to save the encrypted text")
+		file = input("> ")
+		try:
+			file_obj = open(file, "w")
+		except IOError:
+			print("\nCould not write to: ", file)
+			return
+		file_obj.write(text)
+		file_obj.close()
+		print("\nData saved\n")
+		return
+
+	elif choice == 'N' or choice == 'n' or choice == 'No' or choice == 'no':
+		print("\nEncrypted text not saved")
+		return
+	else:
+		print("\nInvalid choice\nEncrypted text will not be saved")
+	return
 
 # execute program
 if __name__ == "__main__":
