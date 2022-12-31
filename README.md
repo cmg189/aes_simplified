@@ -1,6 +1,6 @@
 ## AES Simplified
 
-Python based program that implements an encryption system using a simplified version of the Advanced Encryption System (AES)
+Encryption script based on a simplified version of the Advanced Encryption System (AES), implemented using python3.
 
 ## Table of Contents
 
@@ -8,15 +8,16 @@ Python based program that implements an encryption system using a simplified ver
 2. [Program Output](#output)
 3. [Execution](#exe)
 4. [Function Headers](#function)
-5. [Other](#other)
+5. [Resources](#resources)
 
 ## Description <a name="description"></a>
 
-AES simplified start by asking the user for the filenames of the files that have the plaintext to be encrypted, the encryption key, and the file where the resulting cyphertext will be written to
+AES Simplified start by asking the user for the filenames that contain the plaintext to be encrypted and the encryption key.
+The resulting encrypted text will be outputted and the user will have the option to save the encrypted text to a file.
 
 **NOTE:**
 
-When executing this program, ensure to have files in the same directory containing plaintext, the encryption key, and where the cyphertext will be written to
+When executing, ensure the files containing the plaintext and the encryption key are in the same directory.
 
 
 Plaintext encryption uses various methods implemented by AES such as:
@@ -43,6 +44,7 @@ Plaintext encryption uses various methods implemented by AES such as:
 
 ## Program Output <a name="output"></a>
 
+<img src="output.PNG" width="450" height="400">
 
 ## Execution <a name="exe"></a>
 
@@ -309,7 +311,7 @@ output_results(pre, post, key)
 
 - Description:
 
-	Outputs the results of encryption 
+	Outputs the results of encryption
 
 - Parameters:
 
@@ -318,10 +320,12 @@ output_results(pre, post, key)
 	`post` String representing encrypted text
 
 	`key` String representing encryption key
- 
+
 - Return:
 
 	None
 
 
-## Other <a name="other"></a>
+## Resources <a name="resources"></a>
+
+Further information regarding AES can be found by watching this video: [AES](https://www.youtube.com/watch?v=O4xNJsjtN6E)
