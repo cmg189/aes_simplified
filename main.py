@@ -43,9 +43,9 @@ def main():
 # receives filenames from user
 def get_files():
 	print("\n\n\t\t\tAES Simplified\n\n")
-	print("Enter the file name containing the plaintext to be encrypted")
+	print("Enter the filename containing the plaintext to be encrypted")
 	input_file = input("> ")
-	print("\nEnter the file name containing the encryption key")
+	print("\nEnter the filename containing the encryption key")
 	key_file = input("> ")
 
 	return input_file, key_file
